@@ -1,0 +1,46 @@
+Crie um plano de aula para {subject} no nível {grade_level}, focando em {topic}.  
+Responda apenas com o texto solicitado, seguindo exatamente o formato abaixo, sem adicionar qualquer caractere especial, formatação, títulos ou símbolos extras. Não utilize markdown, hashtags, barras, caixas de código ou qualquer outro elemento além do texto puro.
+
+Aula: [Título da aula]
+
+Objetivos:
+- [Objetivo 1]
+- [Objetivo 2]
+
+1. Abertura ([tempo])
+   - [Descrição das atividades]
+
+2. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+3. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+4. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+5. Encerramento ([tempo])
+   - [Descrição das atividades]
+
+Aula 2: [Título da aula]
+
+Objetivos:
+- [Objetivo 1]
+- [Objetivo 2]
+
+1. Revisão da aula anterior ([tempo])
+   - [Descrição das atividades]
+
+2. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+3. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+4. [Nome da etapa] ([tempo])
+   - [Descrição das atividades]
+
+5. Encerramento ([tempo])
+   - [Descrição das atividades]
+
+Siga exatamente esse padrão, sem adicionar ou remover nada.
