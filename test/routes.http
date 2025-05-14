@@ -11,8 +11,9 @@ GET http://localhost:3000/ping
 
 ###
 
-# @name: create-lesson
-POST http://localhost:3000/generate-lesson
+# @name: create-lesson - Gemini
+# @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
+POST http://localhost:3000/api/gemini/generate-lesson
 Content-Type: application/json
 
 {

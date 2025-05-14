@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import { fastifyCors } from '@fastify/cors';
-import lessonRoutes from './routes/gemini.routes';
+import GeminilessonRoutes from './routes/gemini.routes';
 import { configServerOption } from '../config/serverconfig';
 
 
@@ -17,7 +17,7 @@ const startServer = async () => {
     });
 
     // Registro das rotas
-    app.register(lessonRoutes);
+    app.register(GeminilessonRoutes, { prefix: '/api/gemini' });
 
 
     app.get('/', async (_request, _reply) => {
