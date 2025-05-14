@@ -28,3 +28,7 @@ export async function generateLesson(request: FastifyRequest, reply: FastifyRepl
     return reply.status(500).send({ error: 'Erro ao gerar plano de aula' });
   }
 }
+
+export async function ping(request: FastifyRequest, reply: FastifyReply) {
+  return reply.send({ message: 'pong' });
+}

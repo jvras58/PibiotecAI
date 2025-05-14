@@ -14,6 +14,11 @@ export async function askGemini(prompt: string): Promise<string> {
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash-001',
       contents: prompt,
+      // config: {
+      //   temperature: 0.7,
+      //   maxOutputTokens: 512,
+      //   stopSequences: ['\n'],
+      // },
     });
     return response.text ?? '';
   } catch (error) {
