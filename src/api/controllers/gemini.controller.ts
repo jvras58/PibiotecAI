@@ -29,6 +29,12 @@ export async function generateLesson(request: FastifyRequest, reply: FastifyRepl
   }
 }
 
-export async function ping(request: FastifyRequest, reply: FastifyReply) {
-  return reply.send({ message: 'pong' });
+export async function geminiPing(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    await askGemini('ping');
+    return reply.send({ gemini: 'pong' });
+  } catch (err) {
+    request.log.error('Erro ao testar Gemini:', err);
+    return reply.status(500).send({ error: 'Erro ao testar Gemini' });
+  }
 }
