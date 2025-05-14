@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { config } from 'dotenv';
 config();
 
@@ -9,7 +9,7 @@ if (!GEMINI_API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-export async function askGemini(prompt: string): Promise<string> {
+export async function askGemini(prompt: string): Promise<GenerateContentResponse> {
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash-001',
@@ -20,7 +20,7 @@ export async function askGemini(prompt: string): Promise<string> {
       //   stopSequences: ['\n'],
       // },
     });
-    return response.text ?? '';
+    return response;
   } catch (error) {
     console.error('Erro ao consultar Gemini:', error);
     throw new Error('Falha ao obter resposta do Gemini');

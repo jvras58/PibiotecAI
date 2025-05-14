@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { loadPromptTemplate } from '../../utils/loadPrompTemplate';
-import { generateLessonPlan } from '../services/lessonService';
 import { askGemini } from '../../config/gemini';
 
 let promptTemplate: string | undefined;
@@ -21,8 +20,18 @@ export async function generateLesson(request: FastifyRequest, reply: FastifyRepl
 
   try {
     const template = await getPromptTemplate();
-    const lesson_plan = await generateLessonPlan(template, { subject, grade_level, topic }, askGemini);
-    return reply.send({ lesson_plan });
+    const prompt = template
+      .replace('{subject}', subject)
+      .replace('{grade_level}', grade_level)
+      .replace('{topic}', topic);
+
+    const response = await askGemini(prompt);
+    return reply.send({
+      lesson_plan: response.text ?? '',
+      usageMetadata: response.usageMetadata ?? null,
+      modelVersion: response.modelVersion ?? null,
+      promptFeedback: response.promptFeedback ?? null,
+    });
   } catch (err) {
     request.log.error('Erro ao gerar plano de aula:', err);
     return reply.status(500).send({ error: 'Erro ao gerar plano de aula' });
