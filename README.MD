@@ -4,8 +4,8 @@ Projeto para testes e integração com APIs de IA generativa.
 
 ## ✅ APIs Suportadas
 
-- [ ] Gemini
-- [ ] Llama
+- [x] Gemini
+- [x] Llama
 - [ ] Deepseek
 
 ## 🛠️ Requisitos
