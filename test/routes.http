@@ -21,3 +21,22 @@ Content-Type: application/json
     "grade_level": "7",
     "topic": "Frações e decimais"
 }
+
+###
+
+# @name: get-api-llama-status
+GET http://localhost:3000/api/llama/ping
+
+###
+
+# @name: create-lesson - Llama
+# @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
+
+POST http://localhost:3000/api/llama/generate-lesson
+Content-Type: application/json
+
+{
+    "subject": "Matemática",
+    "grade_level": "7",
+    "topic": "Frações e decimais"
+}
