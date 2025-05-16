@@ -2,12 +2,18 @@ import fetch from 'node-fetch';
 
 export async function askLlama(prompt: string): Promise<string> {
   try {
-    const response = await fetch('http://localhost:11434/api/generate', {
+    const response = await fetch('http://localhost:11434/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'llama3',
-        prompt: prompt
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        stream: false //TODO: Defina como true se você quiser streaming (NDJSON)
       })
     });
 
@@ -15,20 +21,8 @@ export async function askLlama(prompt: string): Promise<string> {
       throw new Error(`Erro na resposta do Ollama: ${response.statusText}`);
     }
 
-    // Lê a resposta como texto e processa linha a linha (NDJSON)
-    const text = await response.text();
-    const lines = text.trim().split('\n');
-    let result = '';
-    for (const line of lines) {
-      const data = JSON.parse(line);
-      if (data.response) {
-        result += data.response;
-      }
-    }
-    return result;
-    // TODO: Procurar uma forma de retornar o resultado em JSON somente....
-    //const data: any  = await response.json();
-    // return data.text;
+    const data: any = await response.json();
+    return data.message.content; // A resposta está em data.message.content
   } catch (error) {
     console.error('Erro ao consultar Llama:', error);
     throw new Error('Falha ao obter resposta do Llama');
