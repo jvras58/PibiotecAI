@@ -13,13 +13,32 @@ GET http://localhost:3000/api/gemini/ping
 
 # @name: create-lesson - Gemini
 # @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
-POST http://localhost:3000/api/gemini/generate-lesson
+POST http://localhost:3000/api/gemini/generate
 Content-Type: application/json
 
 {
-    "subject": "Matemática",
-    "grade_level": "7",
-    "topic": "Frações e decimais"
+  "promptType": "lesson_plan",
+  "data": {
+    "subject": "Science",
+    "grade_level": "8th Grade",
+    "topic": "Photosynthesis"
+  }
+}
+
+###
+
+### @name: create-technical-report - Gemini
+# @description: This endpoint generates a technical report based on the provided title, author, and date.
+POST http://localhost:3000/api/gemini/generate
+Content-Type: application/json
+
+{
+  "promptType": "technical_report",
+  "data": {
+    "title": "Revisão de desempenho do sistema",
+    "author": "AI Team",
+    "date": "2025-05-27"
+  }
 }
 
 ###
@@ -32,11 +51,14 @@ GET http://localhost:3000/api/llama/ping
 # @name: create-lesson - Llama
 # @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
 
-POST http://localhost:3000/api/llama/generate-lesson
+POST http://localhost:3000/api/llama/generate
 Content-Type: application/json
 
 {
-    "subject": "Matemática",
-    "grade_level": "7",
-    "topic": "Frações e decimais"
+  "promptType": "lesson_plan",
+  "data": {
+    "subject": "Science",
+    "grade_level": "8th Grade",
+    "topic": "Photosynthesis"
+  }
 }

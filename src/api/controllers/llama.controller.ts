@@ -1,37 +1,44 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { askLlama } from '../../config/llhama';
-import { loadPromptTemplate } from '../../utils/loadPrompTemplate';
+import { askLlama } from '../../config/llhama'; 
+import { loadPromptTemplateByName } from '../../utils/loadPrompTemplate';
+import { PromptDetail } from '../lib/promptRegistry';
 
-let promptTemplate: string | undefined;
-
-async function getPromptTemplate() {
-  if (!promptTemplate) {
-    promptTemplate = await loadPromptTemplate();
-  }
-  return promptTemplate;
+interface AugmentedFastifyRequest extends FastifyRequest {
+  validatedPromptData?: Record<string, any>;
+  promptDetail?: PromptDetail;
 }
 
-export async function generateLessonLlama(request: FastifyRequest, reply: FastifyReply) {
-  const { subject, grade_level, topic } = request.body as { subject: string; grade_level: string; topic: string };
+export async function generateLlamaContent(request: AugmentedFastifyRequest, reply: FastifyReply) {
+  const { validatedPromptData, promptDetail } = request;
 
-  if (!subject || !grade_level || !topic) {
-    return reply.status(400).send({ error: 'Parâmetros obrigatórios ausentes' });
+  if (!validatedPromptData || !promptDetail) {
+    request.log.error('Dados de validação ou detalhes do prompt ausentes na solicitação (Llama)');
+    return reply.status(500).send({ error: 'Erro interno do servidor: Dados de validação ausentes' });
   }
 
   try {
-    const template = await getPromptTemplate();
-    const prompt = template
-      .replace('{subject}', subject)
-      .replace('{grade_level}', grade_level)
-      .replace('{topic}', topic);
+    const template = await loadPromptTemplateByName(promptDetail.templateName);
+    
+    let prompt = template;
+    for (const key in validatedPromptData) {
+      if (Object.prototype.hasOwnProperty.call(validatedPromptData, key)) {
+        const placeholder = new RegExp(`{${key}}`, 'g');
+        prompt = prompt.replace(placeholder, String(validatedPromptData[key]));
+      }
+    }
 
-    const response = await askLlama(prompt);
+    const response = await askLlama(prompt); 
     return reply.send({
-      lesson_plan: response
+      ai_response: response, 
+      // TODO: Add other LLaMA specific metadata if available and needed
     });
-  } catch (err) {
-    request.log.error('Erro ao gerar plano de aula com Llama:', err);
-    return reply.status(500).send({ error: 'Erro ao gerar plano de aula com Llama' });
+  } catch (err: any) {
+    if (err.message && err.message.startsWith('Falha ao carregar o modelo de prompt')) {
+        request.log.error(`Erro em generateLlamaContent: ${err.message}`);
+        return reply.status(404).send({ error: err.message });
+    }
+    request.log.error('Erro ao gerar conteúdo com Llama:', err);
+    return reply.status(500).send({ error: 'Erro ao gerar conteúdo com Llama' });
   }
 }
 
@@ -40,7 +47,7 @@ export async function llamaPing(request: FastifyRequest, reply: FastifyReply) {
     await askLlama('ping');
     return reply.send({ llama: 'pong' });
   } catch (err) {
-    request.log.error('Erro ao testar Llama:', err);
-    return reply.status(500).send({ error: 'Erro ao testar Llama' });
+    request.log.error('Error testing Llama:', err);
+    return reply.status(500).send({ error: 'Error testing Llama' });
   }
 }

@@ -1,40 +1,46 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { loadPromptTemplate } from '../../utils/loadPrompTemplate';
+import { loadPromptTemplateByName } from '../../utils/loadPrompTemplate';
 import { askGemini } from '../../config/gemini';
+import { PromptDetail } from '../lib/promptRegistry';
 
-let promptTemplate: string | undefined;
-
-async function getPromptTemplate() {
-  if (!promptTemplate) {
-    promptTemplate = await loadPromptTemplate();
-  }
-  return promptTemplate;
+interface AugmentedFastifyRequest extends FastifyRequest {
+  validatedPromptData?: Record<string, any>;
+  promptDetail?: PromptDetail;
 }
 
-export async function generateLesson(request: FastifyRequest, reply: FastifyReply) {
-  const { subject, grade_level, topic } = request.body as { subject: string; grade_level: string; topic: string };
+export async function generateContent(request: AugmentedFastifyRequest, reply: FastifyReply) {
+  const { validatedPromptData, promptDetail } = request;
 
-  if (!subject || !grade_level || !topic) {
-    return reply.status(400).send({ error: 'Parâmetros obrigatórios ausentes' });
+  if (!validatedPromptData || !promptDetail) {
+    request.log.error('Dados de validação ou detalhes do prompt ausentes na solicitação (Gemini)');
+    return reply.status(500).send({ error: 'Erro interno do servidor: Dados de validação ausentes' });
   }
 
   try {
-    const template = await getPromptTemplate();
-    const prompt = template
-      .replace('{subject}', subject)
-      .replace('{grade_level}', grade_level)
-      .replace('{topic}', topic);
+    const template = await loadPromptTemplateByName(promptDetail.templateName);
+    
+    let prompt = template;
+    for (const key in validatedPromptData) {
+      if (Object.prototype.hasOwnProperty.call(validatedPromptData, key)) {
+        const placeholder = new RegExp(`{${key}}`, 'g');
+        prompt = prompt.replace(placeholder, String(validatedPromptData[key]));
+      }
+    }
 
     const response = await askGemini(prompt);
     return reply.send({
-      lesson_plan: response.text ?? '',
+      ai_response: response.text ?? '', 
       usageMetadata: response.usageMetadata ?? null,
       modelVersion: response.modelVersion ?? null,
       promptFeedback: response.promptFeedback ?? null,
     });
-  } catch (err) {
-    request.log.error('Erro ao gerar plano de aula:', err);
-    return reply.status(500).send({ error: 'Erro ao gerar plano de aula' });
+  } catch (err: any) {
+    if (err.message && err.message.startsWith('Falha ao carregar o modelo de prompt')) {
+        request.log.error(`Erro em generateContent (Gemini): ${err.message}`);
+        return reply.status(404).send({ error: err.message });
+    }
+    request.log.error('Erro ao gerar conteúdo com Gemini:', err);
+    return reply.status(500).send({ error: 'Erro ao gerar conteúdo com Gemini' });
   }
 }
 
@@ -43,7 +49,7 @@ export async function geminiPing(request: FastifyRequest, reply: FastifyReply) {
     await askGemini('ping');
     return reply.send({ gemini: 'pong' });
   } catch (err) {
-    request.log.error('Erro ao testar Gemini:', err);
-    return reply.status(500).send({ error: 'Erro ao testar Gemini' });
+    request.log.error('Error testing Gemini:', err);
+    return reply.status(500).send({ error: 'Error testing Gemini' });
   }
 }

@@ -1,4 +1,4 @@
-# PibiotecAI
+# IA-Ladies
 
 Projeto para testes e integração com APIs de IA generativa.
 
@@ -44,12 +44,12 @@ Projeto para testes e integração com APIs de IA generativa.
 
 1. Instale as dependências:
    ```
-   npm install
+   pnpm install
    ```
 
 2. Inicie o servidor em modo desenvolvimento:
    ```
-   npm run dev
+   pnpm run dev
    ```
 
 3. Acesse a API:

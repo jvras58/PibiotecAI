@@ -1,8 +1,8 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import { fastifyCors } from '@fastify/cors';
-import GeminilessonRoutes from './routes/gemini.routes';
+import GeminiRoutes from './routes/gemini.routes';
 import { configServerOption } from '../config/serverconfig';
-import LlamaLessonRoutes from './routes/llama.routes';
+import LlamaRoutes from './routes/llama.routes';
 
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -18,8 +18,8 @@ const startServer = async () => {
     });
 
     // Registro das rotas
-    app.register(GeminilessonRoutes, { prefix: '/api/gemini' });
-    app.register(LlamaLessonRoutes, { prefix: '/api/llama' });
+    app.register(GeminiRoutes, { prefix: '/api/gemini' });
+    app.register(LlamaRoutes, { prefix: '/api/llama' });
 
     app.get('/', async (_request, _reply) => {
         return { message: 'welcome to API' };

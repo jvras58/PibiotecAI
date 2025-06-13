@@ -22,6 +22,7 @@ export async function askLlama(prompt: string): Promise<string> {
     }
 
     const data: any = await response.json();
+    console.log('Resposta do Llama:', data);
     return data.message.content; // A resposta está em data.message.content
   } catch (error) {
     console.error('Erro ao consultar Llama:', error);

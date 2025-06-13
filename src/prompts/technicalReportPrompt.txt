@@ -1,0 +1,7 @@
+Gere um relatório técnico com os seguintes detalhes:
+Título: {title}
+Autor: {author}
+Data: {date}
+
+Estruture o relatório com uma introdução, seções principais discutindo as principais descobertas e uma conclusão.
+O tom deve ser formal e objetivo.

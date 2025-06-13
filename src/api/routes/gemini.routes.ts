@@ -1,7 +1,13 @@
 import { FastifyInstance } from 'fastify';
-import { generateLesson, geminiPing } from '../controllers/gemini.controller';
+import { generateContent, geminiPing } from '../controllers/gemini.controller';
+import { validatePrompt } from '../middleware/validatePrompt.middleware';
 
-export default async function GeminilessonRoutes(fastify: FastifyInstance) {
+export default async function GeminiRoutes(fastify: FastifyInstance) {
     fastify.get('/ping', geminiPing);
-    fastify.post('/generate-lesson', generateLesson);
+    
+    fastify.post(
+        '/generate', 
+        { preHandler: [validatePrompt] }, 
+        generateContent 
+    );
 }
