@@ -1,19 +1,19 @@
 # restclient: https://github.com/Huachao/vscode-restclient
 
 # @name: get welcome to API
-GET http://localhost:3000/
+GET https://pibiotecai.onrender.com/
 
 
 ###
 
 # @name: get-api-gemini-status
-GET http://localhost:3000/api/gemini/ping
+GET https://pibiotecai.onrender.com/api/gemini/ping
 
 ###
 
 # @name: create-lesson - Gemini
 # @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
-POST http://localhost:3000/api/gemini/generate
+POST https://pibiotecai.onrender.com/api/gemini/generate
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### @name: create-technical-report - Gemini
 # @description: This endpoint generates a technical report based on the provided title, author, and date.
-POST http://localhost:3000/api/gemini/generate
+POST https://pibiotecai.onrender.com/api/gemini/generate
 Content-Type: application/json
 
 {
@@ -44,14 +44,14 @@ Content-Type: application/json
 ###
 
 # @name: get-api-llama-status
-GET http://localhost:3000/api/llama/ping
+GET https://pibiotecai.onrender.com/api/llama/ping
 
 ###
 
 # @name: create-lesson - Llama
 # @description: This endpoint generates a lesson plan based on the provided subject, grade level, and topic.
 
-POST http://localhost:3000/api/llama/generate
+POST https://pibiotecai.onrender.com/api/llama/generate
 Content-Type: application/json
 
 {
