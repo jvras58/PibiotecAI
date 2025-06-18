@@ -6,6 +6,7 @@ import LlamaRoutes from './routes/llama.routes';
 
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const host = '0.0.0.0';
 
 const startServer = async () => {
     const serverOptions = await configServerOption();
@@ -26,8 +27,8 @@ const startServer = async () => {
     });
 
     try {
-        await app.listen({ port });
-        app.log.info(`Server running at http://localhost:${port}/`);
+        await app.listen({ port, host });
+        app.log.info(`Server running at http://${host}:${port}/`);
     } catch (err) {
         app.log.error('Error starting server:', err);
         process.exit(1);
